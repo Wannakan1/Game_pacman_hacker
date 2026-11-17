@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+    <title>Hacker Maze</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans+Thai:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <canvas id="bg"></canvas><canvas id="game"></canvas>
+
+    <div id="hud" class="hide">
+        <span>HP <i class="bar"><b id="hp"></b></i></span><span id="kc"></span><span id="qc"></span><span
+            id="sc"></span>
+        <button data-a="mute" class="mt" title="Mute" aria-label="Mute">🔊</button><button data-a="fs" title="Fullscreen" aria-label="Fullscreen">⛶</button><button data-a="pause" title="Pause" aria-label="Pause">⏸</button>
+    </div>
+    <div id="dpad" class="hide"><b data-k="KeyW">W</b><b data-k="KeyA">A</b><b data-k="KeyS">S</b><b data-k="KeyD">D</b>
+    </div>
+    <div id="fire" class="hide">⚡</div>
+    <div id="toast" class="hide"></div>
+
+    <div id="menu" class="scr">
+        <canvas id="hero1" class="inl" width="160" height="200"></canvas>
+        <h1>Hacker Maze</h1>
+        <h3>By: nueng lnw za</h3>
+        <h2>Escape the cyber world</h2>
+        <button data-a="start">Start game</button><button data-a="how">How to play</button><button
+            data-a="set">Settings</button>
+        <p id="best"></p>
+    </div>
+
+    <div id="how" class="scr hide">
+        <h1>How to play</h1>
+        <p>ใช้ปุ่ม <b>W A S D</b> เดินในแมพแบบ Pac-Man (แมพใหญ่ กล้องเลื่อนตาม และสุ่มใหม่ทุกรอบ)</p>
+        <p>💾 เก็บ <b>โค้ด 0 1 0 1 0 1 0 1</b> ให้ครบทั้งแมพเพื่อชนะ</p>
+        <p>❓ ระหว่างเก็บโค้ดจะมี<b>คำถามสุ่ม</b>เด้งขึ้นมา มีเวลาจำกัด ถ้าตอบถูก 👮 ตำรวจหยุดชั่วครู่ 2 วินาที และ 🚀
+            คุณวิ่งเร็วขึ้น 5 วินาที</p>
+        <p>👮 ตำรวจลาดตระเวนและไล่จับ ถ้าโดนจับ HP จะลด! และยิ่งเก็บโค้ดได้เยอะ ตำรวจจะยิ่งวิ่งเร็วขึ้น!</p>
+        <p>💻 หาแล็ปท็อปแฮก กด <b>SPACE</b> เพื่อแฮกตำรวจให้หยุด 5 วินาที (พลังแฮกมีจำกัด) &nbsp;|&nbsp; ลูกศรสีเขียวเล็กๆรอบตัวจะชี้ไปยังโค้ด 0 1 ที่ใกล้ที่สุด พร้อมตัวเลขระยะทาง &nbsp;|&nbsp; P / Esc =
+            หยุดเกม</p>
+        <button data-a="back">Back</button>
+    </div>
+
+    <div id="settings" class="scr hide">
+        <h1>Settings</h1>
+        <label>Music <input type="range" id="vm" min="0" max="1" step=".05"></label>
+        <label>Sound effects <input type="range" id="vs" min="0" max="1" step=".05"></label>
+        <button data-a="mute" class="mt">Mute</button><button data-a="fs">Fullscreen</button>
+        <button data-a="back">Back</button>
+    </div>
+
+    <div id="pause" class="scr hide">
+        <h1>Paused</h1>
+        <button data-a="resume">Resume</button><button data-a="set">Settings</button><button data-a="restart">Restart</button><button data-a="menu">Main menu</button>
+    </div>
+
+    <div id="battle" class="scr hide">
+        <h2>Decrypt challenge · ตอบให้ทันเวลา (คลิกหรือกด 1 2 3)</h2>
+        <div class="bar blue" id="qt"><b id="qtb"></b></div>
+        <p id="q"></p>
+        <div class="opts"><button class="ans" data-a="ans" data-i="0"></button><button class="ans" data-a="ans"
+                data-i="1"></button><button class="ans" data-a="ans" data-i="2"></button></div>
+        <p id="fb"></p><button id="next" class="hide" data-a="next">ต่อไป</button>
+    </div>
+
+    <div id="over" class="scr hide">
+        <h1 class="red">Game over</h1>
+        <h2>คุณถูกตำรวจจับแล้ว!</h2>
+        <canvas id="hero2" class="inl" width="160" height="200"></canvas>
+        <p id="os"></p><button data-a="topun">รับบทลงโทษ</button>
+    </div>
+
+    <div id="punish" class="scr hide">
+        <h1 class="red">You lose</h1>
+        <h2>ถึงเวลารับบทลงโทษ</h2>
+        <div id="card">
+            <div id="pe"></div>
+            <div id="pt"></div>
+        </div>
+        <small>บทลงโทษเป็นแค่เกมสนุกๆ ไม่ทำก็ได้</small>
+        <div class="row"><button data-a="again">Another penalty</button><button data-a="retry">Try again</button></div>
+    </div>
+
+    <div id="win" class="scr hide">
+        <h1>Escaped GG</h1>
+        <h2>คุณหนีออกมาได้แล้ว!</h2>
+        <canvas id="hero3" class="inl" width="160" height="200"></canvas>
+        <p id="ws"></p><button data-a="restart">Play again</button><button data-a="menu">Main menu</button>
+    </div>
+
+    <div id="flash"></div>
+    <div id="fx"></div>
+    <script src="game.js"></script>
+</body>
+
+</html>
